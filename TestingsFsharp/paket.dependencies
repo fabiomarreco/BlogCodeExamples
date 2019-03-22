@@ -1,0 +1,4 @@
+source https://www.nuget.org/api/v2
+nuget Microsoft.Data.Sqlite.Core
+nuget NETStandard.Library.NETFramework
+nuget SQLProvider
