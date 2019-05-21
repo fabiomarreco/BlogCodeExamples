@@ -4,13 +4,13 @@ namespace Email.Contracts
 {
     public class EnviaEmail
     {
-        public EnviaEmail(string destinatario, string conteudo)
+        public EnviaEmail(int cliente, string conteudo)
         {
-            Destinatario = destinatario;
+            Cliente = cliente;
             Conteudo = conteudo;
         }
 
-        public string Destinatario { get; }
+        public int Cliente { get; }
         public string Conteudo { get; }
     }
 }
