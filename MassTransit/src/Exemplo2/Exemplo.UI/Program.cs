@@ -80,7 +80,7 @@ namespace Exemplo.UI
                 switch (fstCmd.ToLowerInvariant())
                 {
                     case "exit": return false;
-                    case "lanca":
+                    case "lanca": // [conta] [valor] [desc?]
                         var conta = int.Parse(strCmd[1]);
                         var valor = decimal.Parse(strCmd[2]);
                         var desc = (strCmd.Length > 3) ? strCmd[3] : "Lancamento";

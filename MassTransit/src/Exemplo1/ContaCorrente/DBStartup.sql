@@ -1,115 +1,27 @@
-USE [master]
+/****** Object:  Table [dbo].[Saldo]    Script Date: 21/05/2019 12:43:46 ******/
+SET ANSI_NULLS ON
 GO
-
-/****** Object:  Database [Exemplo.ContaCorrente]    Script Date: 18/05/2019 07:06:16 ******/
-CREATE DATABASE [Exemplo.ContaCorrente]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'Exemplo.ContaCorrente', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\DATA\Exemplo.ContaCorrente.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'Exemplo.ContaCorrente_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL14.MSSQLSERVER\MSSQL\DATA\Exemplo.ContaCorrente_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+SET QUOTED_IDENTIFIER ON
 GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET COMPATIBILITY_LEVEL = 140
+CREATE TABLE [dbo].[Saldo](
+	[Conta] [int] NOT NULL,
+	[Valor] [numeric](22, 10) NOT NULL
+) ON [PRIMARY]
 GO
-
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [Exemplo.ContaCorrente].[dbo].[sp_fulltext_database] @action = 'enable'
-end
+/****** Object:  Table [dbo].[Transacao]    Script Date: 21/05/2019 12:43:46 ******/
+SET ANSI_NULLS ON
 GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET ANSI_NULL_DEFAULT OFF 
+SET QUOTED_IDENTIFIER ON
 GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET ANSI_NULLS OFF 
+CREATE TABLE [dbo].[Transacao](
+	[ID] [uniqueidentifier] NOT NULL,
+	[Conta] [int] NOT NULL,
+	[Data] [datetime] NOT NULL,
+	[Descricao] [varchar](max) NOT NULL,
+	[Valor] [numeric](22, 10) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET ANSI_PADDING OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET ANSI_WARNINGS OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET ARITHABORT OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET AUTO_CLOSE OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET AUTO_SHRINK OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET AUTO_UPDATE_STATISTICS ON 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET CURSOR_DEFAULT  GLOBAL 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET NUMERIC_ROUNDABORT OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET QUOTED_IDENTIFIER OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET RECURSIVE_TRIGGERS OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET  DISABLE_BROKER 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET TRUSTWORTHY OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET PARAMETERIZATION SIMPLE 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET HONOR_BROKER_PRIORITY OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET RECOVERY SIMPLE 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET  MULTI_USER 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET PAGE_VERIFY CHECKSUM  
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET DB_CHAINING OFF 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET DELAYED_DURABILITY = DISABLED 
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET QUERY_STORE = OFF
-GO
-
-ALTER DATABASE [Exemplo.ContaCorrente] SET  READ_WRITE 
-GO
-
-

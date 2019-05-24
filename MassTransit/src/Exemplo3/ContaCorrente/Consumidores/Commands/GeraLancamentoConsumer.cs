@@ -16,7 +16,7 @@ namespace ContaCorrente.Consumidores
     {
         private const string CONN_STR = "Server=localhost;DataBase=Exemplo.ContaCorrente; Trusted_Connection=true";
 
-        public async Task Consume(ConsumeContext<GeraLancamento> context)
+        public Task Consume(ConsumeContext<GeraLancamento> context)
         {
             var msg = context.Message;
 
@@ -42,7 +42,7 @@ namespace ContaCorrente.Consumidores
                 scope.Complete();
             }
 
-
+            return context.ConsumeCompleted;
         }
     }
 }

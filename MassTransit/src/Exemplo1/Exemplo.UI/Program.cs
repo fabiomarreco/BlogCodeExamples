@@ -27,6 +27,7 @@ namespace Exemplo.UI
                     h.Password("guest");
                 });
 
+                #region handlers
                 cfg.ReceiveEndpoint(r => r.Handler<SaldoAtualizado>(
                     async sd => Log.Information("EVENT: {@message}", sd.Message)));
 
@@ -35,6 +36,7 @@ namespace Exemplo.UI
 
                 cfg.ReceiveEndpoint(r => r.Handler<Pong>(
                     async sd => Log.Information("Pong: {@message}", sd.Message)));
+                #endregion
             });
 
             bus.Start();
@@ -58,30 +60,35 @@ namespace Exemplo.UI
             if (string.IsNullOrEmpty(fstCmd))
                 return true;
 
-            var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas, PegaSaldoContasResp>
-                (GetQueueUri(bus, ContaCorrenteQueues.QueryQueue), TimeSpan.FromMinutes(1));
 
             var debita = await bus.GetSendEndpoint(GetQueueUri(bus, ContaCorrenteQueues.CommandQueue));
-
+            var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas, PegaSaldoContasResp>
+                            (GetQueueUri(bus, ContaCorrenteQueues.QueryQueue), TimeSpan.FromMinutes(1));
             try
             {
                 switch (fstCmd.ToLowerInvariant())
                 {
                     case "exit": return false;
-                    case "lanca":
+
+                    case "lanca":// lanca [clientid] [valor]
                         var conta = int.Parse(strCmd[1]); var valor = decimal.Parse(strCmd[2]);
                         await debita.Send(new GeraLancamento(conta, valor)); return true;
-                    case "pegasaldos":
+
+                    case "pegasaldos":// pegasaldos 999,123,444
+                        
+
                         var contas = strCmd[1].Split(',').Select(s=> int.Parse(s.Trim())).ToArray();
                         var response = await pegaSaldos.Request(new PegaSaldoContas(contas));
                         Console.WriteLine("Response: " + JsonConvert.SerializeObject(response, Formatting.Indented));
                         return true;
+
+
                     case "lanca-stream":
                         var rnd = new Random();
 
                         while (!Console.KeyAvailable)
                         {
-                            var msg = new GeraLancamento(rnd.Next(1, 1000), (decimal)(rnd.NextDouble() * 100000.0));
+                            var msg = new GeraLancamento(rnd.Next(1, 1000), (decimal)(rnd.NextDouble() * 100000.0 - 10000));
                             Log.Information("Sending: {@msg}" , msg);
                             await debita.Send(msg);
                         }

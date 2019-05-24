@@ -33,7 +33,7 @@ namespace ContaCorrente
 
                 config.ReceiveEndpoint(ContaCorrenteQueues.CommandQueue, re =>
                 {
-                    re.UseMessageRetry(o => o.Interval(5, 500));
+                    //re.UseMessageRetry(o => o.Exponential(5, 500));
                     re.Consumer<GeraLancamentoConsumer>();
                 });
 

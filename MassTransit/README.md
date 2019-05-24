@@ -120,3 +120,26 @@ cloud SPB
 (ContaCorrente) -> (SPB)
 
 ```
+
+## Exemplo3
+```plantuml
+state "Reserva com Pendencias" as pendencias
+state "Reserva Efetivada" as efetivado
+state "Cancelado" as cancelado
+[*] --> reservado : CriaReserva 
+state "COE Reservado" as reservado 
+reservado -> efetivado : PeriodoReservaConcluido
+reservado --> pendencias : SaldoCCAtualizado\n(saldo < valor)
+reservado --> cancelado:  CancelaReserva\nCOECancelado
+pendencias -> reservado: SaldoCCAtualizado\n(saldo > valor)
+pendencias --> cancelado: PeriodoReservaConcluido
+pendencias --> cancelado: CancelaReserva\nCOECancelado
+cancelado --> [*]
+efetivado --> [*]
+```
+
+
+
+
+----
+Scheduling

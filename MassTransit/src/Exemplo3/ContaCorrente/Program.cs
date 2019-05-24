@@ -25,7 +25,7 @@ namespace ContaCorrente
             {
                 config.UseSerilog(Log.Logger);
 
-                config.Host(new Uri("rabbitmq://localhost/teste"), h =>
+                config.Host(new Uri("rabbitmq://localhost/exemplo3"), h =>
                 {
                     h.Username("guest");
                     h.Password("guest");

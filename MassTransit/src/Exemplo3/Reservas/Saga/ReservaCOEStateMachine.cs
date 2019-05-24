@@ -77,7 +77,7 @@ namespace Reservas.Saga
                             };
 
                             ctx.Instance.ValorReservado = ctx.Data.Valor;
-                            //salva banco ?
+                            //alguma outra atividade....
                         })
                         .Publish(ctx => new ReservaCriada(ctx.CorrelationId.Value, ctx.Data.Cliente, ctx.Data.CodigoCOE, DateTime.Now, ctx.Data.Valor))
                         .Publish(ctx => new EnviaEmail(ctx.Instance.Chave.Cliente.Value, $"Reserva Criada em R${ ctx.Instance.ValorReservado}"))
@@ -144,8 +144,6 @@ namespace Reservas.Saga
             SetCompletedWhenFinalized();
 
         }
-
-
 
 
 

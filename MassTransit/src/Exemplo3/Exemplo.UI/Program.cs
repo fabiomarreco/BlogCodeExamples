@@ -26,7 +26,7 @@ namespace Exemplo.UI
 
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.Host(new Uri("rabbitmq://localhost/teste"), h =>
+                cfg.Host(new Uri("rabbitmq://localhost/exemplo3"), h =>
                 {
                     h.Username("guest");
                     h.Password("guest");
@@ -70,14 +70,14 @@ namespace Exemplo.UI
                 return true;
 
             var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas, PegaSaldoContasResp>
-                                    (GetQueueUri(bus, ContaCorrenteQueues.QueryQueue), TimeSpan.FromMinutes(1));
+                                    (GetQueueUri(ContaCorrenteQueues.QueryQueue), TimeSpan.FromMinutes(1));
 
 
             var pegaReserva = bus.CreateRequestClient<PegaReservaCoe, PegaReservaCoeResp>
-                                    (GetQueueUri(bus, ReservasQueues.StateMachine), TimeSpan.FromMinutes(1));
+                                    (GetQueueUri(ReservasQueues.StateMachine), TimeSpan.FromMinutes(1));
 
 
-            var debita = await bus.GetSendEndpoint(GetQueueUri(bus, ContaCorrenteQueues.CommandQueue));
+            var debita = await bus.GetSendEndpoint(GetQueueUri(ContaCorrenteQueues.CommandQueue));
 
             try
             {
@@ -127,9 +127,9 @@ namespace Exemplo.UI
 
 
 
-        public static Uri GetQueueUri(IBus bus, string queueName)
+        public static Uri GetQueueUri(string queueName)
         {
-            return new Uri($"rabbitmq://localhost/teste/{queueName}");
+            return new Uri($"rabbitmq://localhost/exemplo3/{queueName}");
         }
 
     }

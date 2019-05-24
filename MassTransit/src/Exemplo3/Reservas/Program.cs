@@ -20,7 +20,7 @@ namespace Reservas
                 .CreateLogger();
 
 
-            var address = new Uri("rabbitmq://localhost/teste");
+            var address = new Uri("rabbitmq://localhost/exemplo3");
 
             var repository = new MongoDbSagaRepository<ReservaCOEState>("mongodb://root:example@localhost:27017", "ReservaCOE");
 
