@@ -6,8 +6,8 @@ namespace SpecEntityNetCore3.Domain
 {
     public interface IUserSpecificationVisitor : ISpecificationVisitor<IUserSpecificationVisitor, User>
     {
-        void Visit(UserIsAgeOfMajority userIsAgeOfMajority);
-        void Visit(UserHasGender userHasGender);
+        void Visit(UserIsAgeOfMajority spec);
+        void Visit(UserHasGender spec);
     }
 
     public interface IUserSpecification : ISpecification<User, IUserSpecificationVisitor>

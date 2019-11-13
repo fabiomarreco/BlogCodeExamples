@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace SpecEntityNetCore3
 {
@@ -6,6 +7,7 @@ namespace SpecEntityNetCore3
     {
         static void Main(string[] args)
         {
+            var dbPath = Path.Combine(AppContext.BaseDirectory, "userdatabase.db");
             Console.WriteLine("Hello World!");
         }
     }

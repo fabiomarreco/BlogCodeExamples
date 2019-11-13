@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SpecEntityNetCore3.Domain;
+using SpecEntityNetCore3.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SpecEntityNetCore3
@@ -14,7 +16,7 @@ namespace SpecEntityNetCore3
         public DateTime Birthday { get; set; }
     }
 
-    public class Repository
+    public class Repository : IRepository
     {
         private UserDbContext _context;
 
@@ -37,8 +39,16 @@ namespace SpecEntityNetCore3
         }
 
 
-        public IEnumerable<User> GetUsers(IUserSpecification spec)
+        public IReadOnlyCollection<User> GetUsers(IUserSpecification spec)
         {
+            var expr = spec.ToEFExpression();
+            var result =
+                _context.Users.Where(expr)
+                .AsEnumerable()
+                .Select(u => new User(u.Name, u.Gender, u.Birthday))
+                .ToArray();
+
+            return result;
         }
 
     }
