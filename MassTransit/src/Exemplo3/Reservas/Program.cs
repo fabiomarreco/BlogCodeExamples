@@ -21,14 +21,13 @@ namespace Reservas
 
 
             var address = new Uri("rabbitmq://localhost/exemplo3");
-
-            var repository = new MongoDbSagaRepository<ReservaCOEState>("mongodb://root:example@localhost:27017", "ReservaCOE");
+            var repository = MongoDbSagaRepository<ReservaCOEState>.Create("mongodb://root:example@localhost:27017", "ReservaCOE");
 
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
                 cfg.UseSerilog();
 
-                var host = cfg.Host(address, x =>
+                 cfg.Host(address, x =>
                 {
                     x.Username("guest");
                     x.Password("guest");
@@ -43,7 +42,7 @@ namespace Reservas
                     });
 
 
-                cfg.ReceiveEndpoint(host, ReservasQueues.StateMachine, e =>
+                cfg.ReceiveEndpoint( ReservasQueues.StateMachine, e =>
                 {
                     e.StateMachineSaga(new ReservaCOEStateMachine(), repository);
                 });

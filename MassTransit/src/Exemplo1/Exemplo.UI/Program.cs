@@ -62,7 +62,7 @@ namespace Exemplo.UI
 
 
             var debita = await bus.GetSendEndpoint(GetQueueUri(bus, ContaCorrenteQueues.CommandQueue));
-            var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas, PegaSaldoContasResp>
+            var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas>
                             (GetQueueUri(bus, ContaCorrenteQueues.QueryQueue), TimeSpan.FromMinutes(1));
             try
             {
@@ -78,7 +78,7 @@ namespace Exemplo.UI
                         
 
                         var contas = strCmd[1].Split(',').Select(s=> int.Parse(s.Trim())).ToArray();
-                        var response = await pegaSaldos.Request(new PegaSaldoContas(contas));
+                        var response = await pegaSaldos.GetResponse<PegaSaldoContasResp>(new PegaSaldoContas(contas));
                         Console.WriteLine("Response: " + JsonConvert.SerializeObject(response, Formatting.Indented));
                         return true;
 

@@ -4,6 +4,7 @@ using ContaCorrente.Contracts.Commands;
 using ContaCorrente.Contracts.Events;
 using Email.Contracts;
 using MassTransit.MongoDbIntegration.Saga;
+using MassTransit.Saga;
 using MongoDB.Bson.Serialization.Attributes;
 using Reservas.Contracts.Commands;
 using Reservas.Contracts.Events;
@@ -18,7 +19,7 @@ namespace Reservas.Saga
     }
 
     [BsonIgnoreExtraElements]
-    public class ReservaCOEState : SagaStateMachineInstance, IVersionedSaga
+    public class ReservaCOEState : SagaStateMachineInstance, ISagaVersion
     {
         public Guid CorrelationId { get; set; }
 

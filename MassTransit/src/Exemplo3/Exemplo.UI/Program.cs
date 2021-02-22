@@ -69,11 +69,11 @@ namespace Exemplo.UI
             if (string.IsNullOrEmpty(fstCmd))
                 return true;
 
-            var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas, PegaSaldoContasResp>
+            var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas>
                                     (GetQueueUri(ContaCorrenteQueues.QueryQueue), TimeSpan.FromMinutes(1));
 
 
-            var pegaReserva = bus.CreateRequestClient<PegaReservaCoe, PegaReservaCoeResp>
+            var pegaReserva = bus.CreateRequestClient<PegaReservaCoe>
                                     (GetQueueUri(ReservasQueues.StateMachine), TimeSpan.FromMinutes(1));
 
 
@@ -89,7 +89,7 @@ namespace Exemplo.UI
                         await debita.Send(new GeraLancamento(conta, valor)); return true;
                     case "pegasaldos":
                         var contas = strCmd[1].Split(',').Select(s=> int.Parse(s.Trim())).ToArray();
-                        var response = await pegaSaldos.Request(new PegaSaldoContas(contas));
+                        var response = await pegaSaldos.GetResponse<PegaSaldoContasResp>(new PegaSaldoContas(contas));
                         Console.WriteLine("Response: " + JsonConvert.SerializeObject(response, Formatting.Indented));
                         return true;
 
@@ -100,7 +100,7 @@ namespace Exemplo.UI
                     case "conclui-reserva": await bus.Publish(new ConcluiReservaCoe(strCmd[1])); return true;
                     case "cria-reserva": await bus.Publish(new CriaReserva(int.Parse(strCmd[1]), strCmd[2], decimal.Parse(strCmd[3], NumberFormatInfo.InvariantInfo))); return true;
                     case "pega-reserva":
-                        var resp = await pegaReserva.Request(new PegaReservaCoe(Guid.Parse(strCmd[1])));
+                        var resp = await pegaReserva.GetResponse<PegaReservaCoeResp>(new PegaReservaCoe(Guid.Parse(strCmd[1])));
                         Console.WriteLine("Response: " + JsonConvert.SerializeObject(resp, Formatting.Indented));
                         return true;
 

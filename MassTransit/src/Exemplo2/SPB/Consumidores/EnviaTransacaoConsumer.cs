@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace SPB.Consumidores
 {
-    public class EnviaTransacaoConsumer : ExecuteActivity<EnviaTransacao>
+    public class EnviaTransacaoConsumer : IExecuteActivity<EnviaTransacao>
     {
-        public async Task<ExecutionResult> Execute(ExecuteContext<EnviaTransacao> context)
+        public  Task<ExecutionResult> Execute(ExecuteContext<EnviaTransacao> context)
         {
             ///fake
             if (context.Arguments.Descricao.Contains("poison", StringComparison.InvariantCultureIgnoreCase))
                 throw new InvalidOperationException("Rejeitado pelo banco central");
 
-            return context.CompletedWithVariables(new { SPBId = Guid.NewGuid() } );
+            var result  = context.CompletedWithVariables(new { SPBId = Guid.NewGuid() } );
+            return Task.FromResult(result);
         }
 
     }

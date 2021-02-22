@@ -21,6 +21,11 @@ namespace Exemplo.UI
         {
             Log.Logger = new LoggerConfiguration().WriteTo.Console().MinimumLevel.Information().CreateLogger();
 
+            Task LogInfoAsync (string msg, params object[] values)
+            {
+                Log.Information(msg, values);
+                return Task.CompletedTask;
+            }
 
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
@@ -31,22 +36,22 @@ namespace Exemplo.UI
                 });
 
                 cfg.ReceiveEndpoint(r => r.Handler<SaldoAtualizado>(
-                    async sd => Log.Information("EVENT: {@message}", sd.Message)));
+                    sd => LogInfoAsync("EVENT: {@message}", sd.Message)));
 
                 cfg.ReceiveEndpoint(r => r.Handler<Fault<GeraLancamento>>(
-                    async sd => Log.Information("FAULT: {@message}", new { sd.MessageId, sd.Message.Exceptions[0].Message })));
+                    sd => LogInfoAsync("FAULT: {@message}", new { sd.MessageId, sd.Message.Exceptions[0].Message })));
 
                 cfg.ReceiveEndpoint(r => r.Handler<Pong>(
-                    async sd => Log.Information("Pong: {@message}", sd.Message)));
+                    sd => LogInfoAsync("Pong: {@message}", sd.Message)));
 
                 cfg.ReceiveEndpoint("routingSlipLogs",
                     r =>
                     {
-                        r.Handler<RoutingSlipCompleted>(async h => Log.Information("RS COMPLETED: {@event}", h.Message));
-                        r.Handler<RoutingSlipFaulted>(async h => Log.Information("RS Faulted!"));
-                        r.Handler<RoutingSlipActivityCompleted>(async h => Log.Information("ACT Completed: {@event}", new { h.Message.ActivityName, h.Message.Data, h.Message.Variables }));
-                        r.Handler<RoutingSlipActivityFaulted>(async h => Log.Information("ACT Faulted: {@event}", h.Message.ExceptionInfo.Message));
-                        r.Handler<RoutingSlipActivityCompensated>(async h => Log.Information("ACT Compensated: {@event}", new { h.Message.ActivityName, h.Message.Data } ));
+                        r.Handler<RoutingSlipCompleted>(h => LogInfoAsync("RS COMPLETED: {@event}", h.Message));
+                        r.Handler<RoutingSlipFaulted>(h => LogInfoAsync("RS Faulted!"));
+                        r.Handler<RoutingSlipActivityCompleted>(h => LogInfoAsync("ACT Completed: {@event}", new { h.Message.ActivityName, h.Message.Data, h.Message.Variables }));
+                        r.Handler<RoutingSlipActivityFaulted>(h => LogInfoAsync("ACT Faulted: {@event}", h.Message.ExceptionInfo.Message));
+                        r.Handler<RoutingSlipActivityCompensated>(h => LogInfoAsync("ACT Compensated: {@event}", new { h.Message.ActivityName, h.Message.Data } ));
                     });
             });
 
@@ -63,8 +68,6 @@ namespace Exemplo.UI
 
         }
 
-
-
         static async Task<bool> Execute(IBus bus)
         {
             var strCmd = Console.ReadLine().Split(' ');
@@ -72,7 +75,9 @@ namespace Exemplo.UI
             if (string.IsNullOrEmpty(fstCmd))
                 return true;
 
-            var pegaSaldos = bus.CreateRequestClient<PegaSaldoContas, PegaSaldoContasResp>
+            var pegaSaldos = 
+               // bus.CreateRequestClient<PegaSaldoContas, PegaSaldoContasResp>
+               bus.CreateRequestClient<PegaSaldoContas>
                 (GetQueueUri(bus, ContaCorrenteQueues.QueryQueue), TimeSpan.FromMinutes(1));
 
             try
@@ -90,7 +95,7 @@ namespace Exemplo.UI
 
                     case "pegasaldos":
                         var contas = strCmd[1].Split(',').Select(s => int.Parse(s.Trim())).ToArray();
-                        var response = await pegaSaldos.Request(new PegaSaldoContas(contas));
+                        var response = await pegaSaldos.GetResponse<PegaSaldoContasResp>(new PegaSaldoContas(contas));
                         Console.WriteLine("Response: " + JsonConvert.SerializeObject(response, Formatting.Indented));
                         return true;
 
